@@ -50,9 +50,7 @@ public class DeathNoteImpl implements DeathNote {
      */
     @Override
     public void writeName(final String name) {
-        if (Objects.isNull(name)) {
-            throw new NullPointerException("the param passed is null"); //NOPMD
-        }
+        Objects.requireNonNull(name);
 
         this.humans.put(name, new Death(System.currentTimeMillis()));
         this.lastNameWritten = name;
