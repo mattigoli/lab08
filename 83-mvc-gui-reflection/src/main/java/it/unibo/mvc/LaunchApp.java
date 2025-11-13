@@ -1,14 +1,21 @@
 package it.unibo.mvc;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
 import it.unibo.mvc.api.DrawNumberController;
+import it.unibo.mvc.api.DrawNumberView;
 import it.unibo.mvc.controller.DrawNumberControllerImpl;
 import it.unibo.mvc.model.DrawNumberImpl;
-import it.unibo.mvc.view.DrawNumberSwingView;
 
 /**
  * Application entry-point.
  */
 public final class LaunchApp {
+
+    private static final String PATH_VIEW = "it.unibo.mvc.view.";
+    private static final int N_VIEWS = 3;
 
     private LaunchApp() { }
 
@@ -23,9 +30,21 @@ public final class LaunchApp {
      * @throws IllegalAccessException in case of reflection issues
      * @throws IllegalArgumentException in case of reflection issues
      */
-    public static void main(final String... args) {
+    public static void main(final String... args) throws ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         final var model = new DrawNumberImpl();
         final DrawNumberController app = new DrawNumberControllerImpl(model);
-        app.addView(new DrawNumberSwingView());
+
+        final List<String> views = List.of("DrawNumberSwingView", "DrawNumberStandardOutputView");
+        
+        for(var view : views){
+            Class<?> c = Class.forName(PATH_VIEW + view);
+            if(DrawNumberView.class.isAssignableFrom(c)){
+                Constructor<?> con = c.getConstructor();
+                for(int i = 0; i < N_VIEWS; i++) {
+                    app.addView((DrawNumberView)con.newInstance());
+                }
+            }
+        }
+        
     }
 }
