@@ -30,21 +30,20 @@ public final class LaunchApp {
      * @throws IllegalAccessException in case of reflection issues
      * @throws IllegalArgumentException in case of reflection issues
      */
-    public static void main(final String... args) throws ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public static void main(final String... args) throws ClassNotFoundException, NoSuchMethodException, 
+        InstantiationException, IllegalAccessException, InvocationTargetException {
         final var model = new DrawNumberImpl();
         final DrawNumberController app = new DrawNumberControllerImpl(model);
 
         final List<String> views = List.of("DrawNumberSwingView", "DrawNumberStandardOutputView");
-        
-        for(var view : views){
-            Class<?> c = Class.forName(PATH_VIEW + view);
-            if(DrawNumberView.class.isAssignableFrom(c)){
-                Constructor<?> con = c.getConstructor();
-                for(int i = 0; i < N_VIEWS; i++) {
-                    app.addView((DrawNumberView)con.newInstance());
+        for (final var view : views) {
+            final Class<?> c = Class.forName(PATH_VIEW + view);
+            if (DrawNumberView.class.isAssignableFrom(c)) {
+                final Constructor<?> con = c.getConstructor();
+                for (int i = 0; i < N_VIEWS; i++) {
+                    app.addView((DrawNumberView) con.newInstance());
                 }
             }
-        }
-        
+        } 
     }
 }
